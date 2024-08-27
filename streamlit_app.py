@@ -23,6 +23,10 @@ def random_mask(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> bool:
     return random() < frac_random
 
 
+def causal_mask(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> bool:
+    return kv_idx <= q_idx
+
+
 def bigbird_mask_mod(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> bool:
     # Sliding window mask
     slw_mask = abs(q_idx - kv_idx) <= window_parameter
@@ -118,6 +122,7 @@ masking_options = {
     "Prefix Token Mask": prefix_token_mask,
     "Random Mask": random_mask,
     "BigBird Mask": bigbird_mask_mod,
+    "Causal Mask": causal_mask,
 }
 
 option = st.sidebar.selectbox(
