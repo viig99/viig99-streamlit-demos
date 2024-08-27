@@ -118,7 +118,7 @@ masking_options = {
 option = st.sidebar.selectbox(
     "Select Masking Function",
     list(masking_options.keys()),
-    index=list(masking_options.keys()).index("Sliding Window Mask"),
+    index=list(masking_options.keys()).index("BigBird Mask"),
 )
 
 # Set the ACE editor with the selected function's code
