@@ -1,6 +1,6 @@
-# :earth_americas: GDP dashboard template
+# Flex-Attention Mask Visualization
 
-A simple Streamlit app showing the GDP of different countries in the world.
+A Streamlit app to visualize the attention mask of the Flex-Attention model.
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://viig99-app-demos-jz7hllm8n2ps6fkkwmotuj.streamlit.app/)
 
