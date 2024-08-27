@@ -27,7 +27,8 @@ def bigbird_mask_mod(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> 
     # Sliding window mask
     slw_mask = abs(q_idx - kv_idx) <= window_parameter
     # Global attention mask
-    prefix_lm = q_idx == 0 or kv_idx == 0
+    tokens = [int(x.strip()) for x in global_tokens.split(",")]
+    prefix_lm = q_idx in tokens or kv_idx in tokens
     # Random mask
     r_mask = random() < frac_random
 
@@ -79,6 +80,7 @@ def parse_function_from_string(source_code: str):
             {
                 "window_parameter": window_parameter,
                 "frac_random": frac_random,
+                "global_tokens": global_tokens,
                 "random": random,
             },
             local_context,
@@ -104,6 +106,9 @@ window_parameter = st.sidebar.number_input(
 )
 frac_random = st.sidebar.number_input(
     "Fraction of Random Mask", min_value=0.0, max_value=1.0, value=0.1, step=0.05
+)
+global_tokens = st.sidebar.text_input(
+    "Global Tokens as comma seperarted values", value="0"
 )
 
 # Add a selectbox to choose between masking functions
@@ -138,7 +143,7 @@ st.markdown("#### Flex Attention Mask Visualization")
 st.markdown(
     """
     Mask for the selected attention mechanism.
-    Modify the function with optional global parameters (`window_parameter`, `frac_random`) to visualize output pattern.
+    Modify the function with optional global parameters (`window_parameter`, `frac_random`, `global_tokens`) to visualize output pattern.
     """
 )
 mask = flex_attention(mask_mod_func, 1, 1, seq_len)
