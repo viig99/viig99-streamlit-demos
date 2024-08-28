@@ -1,3 +1,4 @@
+from flask import g
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,7 +17,8 @@ def sliding_window_mask(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) 
 
 
 def prefix_token_mask(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> bool:
-    return q_idx == 0 or kv_idx == 0
+    tokens = [int(x.strip()) for x in global_tokens.split(",")]
+    return (q_idx in tokens) | (kv_idx in tokens)
 
 
 def random_mask(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> bool:
