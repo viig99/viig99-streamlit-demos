@@ -104,7 +104,7 @@ def parse_function_from_string(source_code: str):
 
 # Set up the Streamlit sidebar for user inputs
 st.sidebar.header("Global Configurable Parameters")
-seq_len = st.sidebar.slider("Sequence Length", 32, max_value=128, value=64)
+seq_len = st.sidebar.slider("Sequence Length", 16, max_value=128, value=24)
 window_parameter = st.sidebar.number_input(
     "Sliding Window size", min_value=0, max_value=seq_len, value=5, step=1
 )
@@ -154,8 +154,29 @@ st.markdown(
 mask = flex_attention(mask_mod_func, 1, 1, seq_len)
 
 # Visualize the mask for the selected batch and head
-fig, ax = plt.subplots(figsize=(6, 6))
-ax.imshow(mask[0, 0], cmap="viridis")
-ax.set_xlabel("Sequence Position")
-ax.set_ylabel("Sequence Position")
+fig, ax = plt.subplots(figsize=(8, 8))
+
+# Show the mask
+cax = ax.pcolor(mask[0, 0], cmap="viridis", edgecolors="black", linewidths=2)
+
+ax.set_xlabel("Key/Value Position")
+ax.set_ylabel("Query Position")
+
+ax.xaxis.set_label_position("top")
+ax.xaxis.tick_top()
+
+# Set the number of ticks to match sequence length
+ax.set_xticks(np.arange(seq_len) + 0.5, minor=False)
+ax.set_yticks(np.arange(seq_len) + 0.5, minor=False)
+
+# Modify x-label and y-label by adding the prefix Q and KV
+ax.set_xticklabels([f"KV{i + 1}" for i in range(seq_len)], rotation=45)
+ax.set_yticklabels([f"Q{i + 1}" for i in range(seq_len)])
+
+# Invert the y-axis to place the origin at the top-left
+ax.invert_yaxis()
+
+# Add color bar for reference
+fig.colorbar(cax, ax=ax, use_gridspec=True)
+
 st.pyplot(fig)
