@@ -27,6 +27,13 @@ def causal_mask(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> bool:
     return kv_idx <= q_idx
 
 
+def dilated_sliding_mask(
+    batch_idx: int, head_idx: int, q_idx: int, kv_idx: int
+) -> bool:
+    diff = abs(q_idx - kv_idx)
+    return (diff <= window_parameter) & (diff % dilation_factor == 0)
+
+
 def bigbird_mask_mod(batch_idx: int, head_idx: int, q_idx: int, kv_idx: int) -> bool:
     # Sliding window mask
     slw_mask = abs(q_idx - kv_idx) <= window_parameter
@@ -84,6 +91,7 @@ def parse_function_from_string(source_code: str):
             {
                 "window_parameter": window_parameter,
                 "frac_random": frac_random,
+                "dilation_factor": dilation_factor,
                 "global_tokens": global_tokens,
                 "random": random,
             },
@@ -111,6 +119,9 @@ window_parameter = st.sidebar.number_input(
 frac_random = st.sidebar.number_input(
     "Fraction of Random Mask", min_value=0.0, max_value=1.0, value=0.1, step=0.05
 )
+dilation_factor = st.sidebar.number_input(
+    "Dilation Factor", min_value=1, max_value=5, value=2, step=1
+)
 global_tokens = st.sidebar.text_input(
     "Global Tokens as comma seperarted values", value="0"
 )
@@ -119,6 +130,7 @@ global_tokens = st.sidebar.text_input(
 masking_options = {
     "No Mask": default_mask_mod,
     "Sliding Window Mask": sliding_window_mask,
+    "Dilated Sliding Mask": dilated_sliding_mask,
     "Prefix Token Mask": prefix_token_mask,
     "Random Mask": random_mask,
     "BigBird Mask": bigbird_mask_mod,
@@ -148,7 +160,7 @@ st.markdown("#### Flex Attention Mask Visualization")
 st.markdown(
     """
     Mask for the selected attention mechanism.
-    Modify the function with optional global parameters (`window_parameter`, `frac_random`, `global_tokens`) to visualize output pattern.
+    Modify the function with optional global parameters (`window_parameter`, `frac_random`, `dilation_factor`, `global_tokens`) to visualize output pattern.
     """
 )
 mask = flex_attention(mask_mod_func, 1, 1, seq_len)
