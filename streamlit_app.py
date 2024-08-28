@@ -157,7 +157,9 @@ if mask_mod_func is None:
     mask_mod_func = masking_options[option]
 
 # Generate the mask based on user input
-st.markdown("#### Flex Attention Mask Visualization")
+st.markdown(
+    "#### [Flex Attention](https://pytorch.org/blog/flexattention/) Mask Visualization"
+)
 st.markdown(
     """
     Mask for the selected attention mechanism.

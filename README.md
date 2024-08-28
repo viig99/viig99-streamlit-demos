@@ -1,6 +1,6 @@
 # Flex-Attention Mask Visualization
 
-A Streamlit app to visualize the attention mask of the Flex-Attention model.
+A Streamlit app to visualize the attention mask of the [Flex-Attention](https://pytorch.org/blog/flexattention/) model.
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://viig99-app-demos-jz7hllm8n2ps6fkkwmotuj.streamlit.app/)
 
